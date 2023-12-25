@@ -156,7 +156,7 @@ class PoseidonMerkle {
   ///////////////////////////////////////////////////////////////////////
 
   getBase2Log(y: number) {
-    return Math.floor(Math.log(y) / Math.log(2));
+    return Math.ceil(Math.log(y) / Math.log(2));
   }
 
   binaryPosToIdx(binaryPos: string | any[]) {

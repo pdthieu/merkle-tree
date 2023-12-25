@@ -37,13 +37,14 @@ export const makeMerkleTree = async (
   while (Array.isArray(root)) {
     root = root[0];
   }
+  const merklePosArray = poseidonMerkle.generateMerklePosArray(depth);
 
   const tokensWithProof = data.map((row, index) => ({
     proofs: {
       paths2Root: poseidonMerkle
         .getProof(index, tree, leaves)
         .map((el) => toHexString(el)),
-      paths2RootPos: poseidonMerkle.generateMerklePosArray(depth)[index],
+      paths2RootPos: merklePosArray[index],
     },
     leafHash: toHexString(leaves[index]),
     index,
@@ -65,31 +66,31 @@ export const makeMerkleTree = async (
   exportToJson(result, options.exportFileName);
 };
 
-// export const verifyProof = (
-//   root: string,
-//   proofs: string[],
-//   rawData: string,
-//   types: string[]
-// ) => {
-//   const data = JSON.parse(rawData);
-//   if (Object.keys(data).length !== types.length) {
-//     throw new Error("Data and types is inconsistent");
-//   }
+export const verifyProof = async (
+  root: string,
+  proofs: { paths2Root: string[]; paths2RootPos: number[] },
+  rawData: string,
+  types: string[]
+) => {
+  const { paths2Root, paths2RootPos } = proofs;
+  const data = JSON.parse(rawData);
+  if (Object.keys(data).length !== types.length) {
+    throw new Error("Data and types is inconsistent");
+  }
 
-//   const { keccak256: etherKeccak, defaultAbiCoder } = ethers.utils;
-//   let computedHash = etherKeccak(
-//     defaultAbiCoder.encode(types, Object.values(data))
-//   );
-//   proofs.forEach((proof) => {
-//     computedHash = etherKeccak(
-//       computedHash < proof
-//         ? computedHash + proof.substring(2)
-//         : proof + computedHash.substring(2)
-//     );
-//   });
+  const poseidon = await buildPoseidonOpt();
+  const babyJub = await buildBabyjub();
+  const F = babyJub.F;
+  const toHexString = (val: any) => {
+    return "0x" + F.toObject(val).toString(16);
+  };
 
-//   return computedHash === root;
-// };
-// function etherToWei(arg0: any): any {
-//   throw new Error("Function not implemented.");
-// }
+  let computedHash = poseidon(Object.values(data));
+  paths2Root.forEach((proof, index) => {
+    computedHash = paths2RootPos[index]
+      ? poseidon([proof, computedHash])
+      : poseidon([computedHash, proof]);
+  });
+
+  return toHexString(computedHash) === root;
+};

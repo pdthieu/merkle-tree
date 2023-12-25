@@ -28,8 +28,8 @@ const Generator = ({}: GeneratorProps) => {
   } = useGenerator();
 
   return (
-    <Box w="full" maxW="32rem">
-      <Heading mb={8} color={"green.700"}>
+    <Box w="full" maxW="48rem">
+      <Heading mb={8} color={"green.500"}>
         Generator
       </Heading>
 
