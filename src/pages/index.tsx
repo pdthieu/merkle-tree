@@ -1,10 +1,10 @@
 import Generator from "@/components/Generator";
 import Verifier from "@/components/Verifier";
-import VerifierZK from "@/components/VerifierZK";
 import { Stack } from "@chakra-ui/react";
 import { NextPage } from "next";
 
 const Home: NextPage = () => {
+
   return (
     <Stack
       direction={["column", "column", "row"]}
@@ -16,7 +16,6 @@ const Home: NextPage = () => {
     >
       <Generator />
       <Verifier />
-      <VerifierZK />
     </Stack>
   );
 };

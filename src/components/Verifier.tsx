@@ -3,19 +3,18 @@ import React from "react";
 import FormControl from "./FormControl";
 import useVerifier from "@/hooks/useVerifier";
 
-interface VerifierProps {}
-
-const Verifier = ({}: VerifierProps) => {
+const Verifier = () => {
   const { values, setValue, isDisabled, isValid, handleVerify } =
     useVerifier();
 
   const prettifyJSON = (json: string) => {
-      return JSON.stringify(JSON.parse(json), null, 2);
+    if (json === null || json === undefined || json === "") return;
+    return JSON.stringify(JSON.parse(json), null, 2);
   };
 
   return (
     <Box w="full" maxW="48rem">
-      <Heading mb={8} color="orange.500">
+      <Heading mb={8} color="orange.500" textAlign={"center"}>
         Verifier
       </Heading>
       <FormControl label="Tree root">
@@ -55,14 +54,15 @@ const Verifier = ({}: VerifierProps) => {
           fontFamily={"monospace"}
           placeholder={`Example: \n${prettifyJSON(`{
                           "publicAddress": "0x7Af6f70217108AfE82983145db6B4F82C8Ef598F",
-                          "amount": "100000000000000000000"
+                          "amount": "100000000000000000000",
+                          "id": 1
                         }`)}`}
           h="8rem"
         />
       </FormControl>
       <FormControl label="Type of each data attribute (separated by comma)">
         <Input
-          placeholder="Example: address, uint256"
+          placeholder="Example: address, uint256, uint32"
           value={values.types}
           onChange={(e) => setValue("types", e.target.value)}
           fontSize={"xs"}
@@ -76,7 +76,7 @@ const Verifier = ({}: VerifierProps) => {
         onClick={handleVerify}
         isDisabled={isDisabled}
       >
-        Verify
+        Verify Proof
       </Button>
       <Box mt={4}>
         {isValid !== null &&
@@ -90,6 +90,16 @@ const Verifier = ({}: VerifierProps) => {
             </Text>
           ))}
       </Box>
+
+      <Button
+        colorScheme={"orange"}
+        w="full"
+        mt={4}
+        onClick={handleVerify}
+        isDisabled={isDisabled}
+      >
+        Generate Proof ZK
+      </Button>
     </Box>
   );
 };

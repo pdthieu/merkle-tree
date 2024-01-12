@@ -29,7 +29,7 @@ const Generator = ({}: GeneratorProps) => {
 
   return (
     <Box w="full" maxW="48rem">
-      <Heading mb={8} color={"green.500"}>
+      <Heading mb={8} color={"green.500"} textAlign={"center"}>
         Generator
       </Heading>
 

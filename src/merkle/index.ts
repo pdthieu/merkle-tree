@@ -64,6 +64,8 @@ export const makeMerkleTree = async (
     leaves: tokensWithProof,
   };
   exportToJson(result, options.exportFileName);
+
+  return result;
 };
 
 export const verifyProof = async (
