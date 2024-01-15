@@ -6,6 +6,7 @@ interface UploadInputProps {
   label: string;
   file: File | null;
   onSubmit: (f: File | null) => void;
+  onDrop: () => void;
   inputProps?: InputProps;
 }
 
@@ -13,6 +14,7 @@ const UploadInput = ({
   label,
   file,
   onSubmit,
+  onDrop,
   inputProps,
 }: UploadInputProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -61,6 +63,7 @@ const UploadInput = ({
               zIndex="50"
               cursor="pointer"
               onChange={handleChange}
+              onDrop={onDrop}
               title=""
               accept="image/png, image/jpeg"
               opacity="0"

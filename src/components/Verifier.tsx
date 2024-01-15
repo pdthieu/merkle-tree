@@ -2,15 +2,11 @@ import { Box, Button, Heading, Input, Textarea, Text } from "@chakra-ui/react";
 import React from "react";
 import FormControl from "./FormControl";
 import useVerifier from "@/hooks/useVerifier";
+import { prettifyJSON } from "@/utils/util";
 
 const Verifier = () => {
   const { values, setValue, isDisabled, isValid, handleVerify } =
     useVerifier();
-
-  const prettifyJSON = (json: string) => {
-    if (json === null || json === undefined || json === "") return;
-    return JSON.stringify(JSON.parse(json), null, 2);
-  };
 
   return (
     <Box w="full" maxW="48rem">

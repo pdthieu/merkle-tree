@@ -1,8 +1,7 @@
-import { ethers } from "ethers";
 import { convertFile, exportToJson, etherToWei } from "@/utils";
 import { buildBabyjub, buildPoseidonOpt } from "circomlibjs";
-import PoseidonMerkle from "@/libs/PoseidonMerkle";
 import buildPoseidonMerkle from "@/libs/PoseidonMerkle";
+import { IMerkleTree } from "./interface";
 
 export const makeMerkleTree = async (
   file: File,
@@ -10,7 +9,7 @@ export const makeMerkleTree = async (
     ETHToWei: true,
     exportFileName: "export",
   }
-) => {
+): Promise<IMerkleTree> => {
   const poseidonJs = await buildPoseidonOpt();
   const babyJub = await buildBabyjub();
   const F = babyJub.F;
@@ -63,8 +62,6 @@ export const makeMerkleTree = async (
     merkleRoot: toHexString(root),
     leaves: tokensWithProof,
   };
-  exportToJson(result, options.exportFileName);
-
   return result;
 };
 
@@ -73,7 +70,7 @@ export const verifyProof = async (
   proofs: { paths2Root: string[]; paths2RootPos: number[] },
   rawData: string,
   types: string[]
-) => {
+): Promise<boolean> => {
   const { paths2Root, paths2RootPos } = proofs;
   const data = JSON.parse(rawData);
   if (Object.keys(data).length !== types.length) {
